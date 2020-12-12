@@ -1,0 +1,19 @@
+{
+  "name": "recipe_connection",
+  "version": "1.0.0",
+  "description": "An app to share cooking recipes",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yuichiro Abe",
+  "license": "ISC",
+  "dependencies": {
+    "cities": "^2.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "eslint": "^7.15.0"
+  }
+}
