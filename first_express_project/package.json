@@ -1,0 +1,17 @@
+{
+  "name": "first_express_project",
+  "version": "1.0.0",
+  "description": "lesson 8",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yuichiro",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.15.0"
+  }
+}
