@@ -28,7 +28,7 @@ exports.saveSubscriber = (req, res) => {
     zipCode: req.body.zipCode
   });
   newSubscriber.save()
-    .then((result) => {
+    .then(() => {
       res.render("thanks");
     })
     .catch((error) => {
