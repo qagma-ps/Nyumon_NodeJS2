@@ -12,9 +12,6 @@ module.exports = {
       .catch((error) =>{
         console.log(error.message);
         return [];
-      })
-      .then(() => {
-        console.log("promise complete");
       });
   },
   getSubscriptionPage: (req, res) => {
@@ -33,5 +30,20 @@ module.exports = {
       .catch((error) => {
         if(error) res.send(error);
       });
+  },
+  show: (req, res, next) => {
+    let subscriberId = req.params.id;
+    Subscriber.findById(subscriberId)
+      .then(subscriber => {
+        res.locals.subscriber = subscriber;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error fetching by subscriber id: ${error.message}`);
+        next(error);
+      })
+  },
+  showView: (req, res) => {
+    res.render("subscribers/show");
   }
 };

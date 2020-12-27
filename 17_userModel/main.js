@@ -10,7 +10,8 @@ const port = 3000,
       layouts = require("express-ejs-layouts"),
       errorController = require("./controllers/errorController"),
       subscribersController = require("./controllers/subscribersController"),
-      usersController = require("./controllers/usersController");
+      usersController = require("./controllers/usersController"),
+      router = express.Router();
 
 mongoose.connect(dbURL+dbName, {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -28,15 +29,20 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
+app.use("/", router);
+router.get("/", (req, res) => {
   res.send("Welocome to Confetti Cuisine!");
 });
-app.get("/subscribers", subscribersController.getAllSubscribers);
-app.get("/contact", subscribersController.getSubscriptionPage);
-app.post("/subscribe", subscribersController.saveSubscriber);
-app.get("/name/:myName", homeController.respondWithName);
-app.get("/course", homeController.showCourses);
-app.get("/users", usersController.index, usersController.indexView);
+router.get("/subscribers", subscribersController.getAllSubscribers);
+router.get("/subscribers/:id", subscribersController.show, subscribersController.showView);
+router.get("/contact", subscribersController.getSubscriptionPage);
+router.post("/subscribe", subscribersController.saveSubscriber);
+router.get("/name/:myName", homeController.respondWithName);
+router.get("/course", homeController.showCourses);
+router.get("/users", usersController.index, usersController.indexView);
+router.get("/users/new", usersController.new);
+router.post("/users/create", usersController.create, usersController.redirectView);
+router.get("/users/:id", usersController.show, usersController.showView);
 
 app.use(errorController.logErrors);
 app.use(errorController.respondNoResourceFound);

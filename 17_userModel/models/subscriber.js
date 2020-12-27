@@ -1,8 +1,9 @@
 "use strict";
 
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"),
+      {Schema} = mongoose;
 
-const subscriberSchema =new mongoose.Schema({
+const subscriberSchema =new Schema({
   name: {
     type: String,
     required: true
@@ -18,9 +19,10 @@ const subscriberSchema =new mongoose.Schema({
     min: [10000, "Zip code too short"],
     max: 99999
   },
-  courses: [{type: mongoose.Schema.Types.ObjectId, ref: "Course"}]
+  courses: [{type: Schema.Types.ObjectId, ref: "Course"}]
 });
 
+/*
 subscriberSchema.methods.getInfo = function(){
   return `Name: ${this.name} Email: ${this.email} Zip Code: ${this.zipCode}`;
 };
@@ -30,5 +32,6 @@ subscriberSchema.methods.findLocalSubscribers = function(){
              .find({zipCode: this.zipCode})
              .exec()
 }
+*/
 
 module.exports = mongoose.model("Subscriber", subscriberSchema);
