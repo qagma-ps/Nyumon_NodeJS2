@@ -11,7 +11,8 @@ const port = 3000,
       errorController = require("./controllers/errorController"),
       subscribersController = require("./controllers/subscribersController"),
       usersController = require("./controllers/usersController"),
-      router = express.Router();
+      router = express.Router(),
+      methodOverride = require("method-override");
 
 mongoose.connect(dbURL+dbName, {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -28,6 +29,9 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 app.use(express.static("public"));
+router.use(methodOverride("_method", {
+  methods: ["POST", "GET"]
+}));
 
 app.use("/", router);
 router.get("/", (req, res) => {
@@ -43,6 +47,9 @@ router.get("/users", usersController.index, usersController.indexView);
 router.get("/users/new", usersController.new);
 router.post("/users/create", usersController.create, usersController.redirectView);
 router.get("/users/:id", usersController.show, usersController.showView);
+router.get("/users/:id/edit", usersController.edit);
+router.put("/users/:id/update", usersController.update, usersController.redirectView);
+router.delete("/users/:id/delete", usersController.delete, usersController.redirectView);
 
 app.use(errorController.logErrors);
 app.use(errorController.respondNoResourceFound);
