@@ -20,18 +20,12 @@ const subscriberSchema =new Schema({
     max: 99999
   },
   courses: [{type: Schema.Types.ObjectId, ref: "Course"}]
+},{
+  timestamps: true
 });
 
-/*
 subscriberSchema.methods.getInfo = function(){
   return `Name: ${this.name} Email: ${this.email} Zip Code: ${this.zipCode}`;
 };
-
-subscriberSchema.methods.findLocalSubscribers = function(){
-  return this.model("Subscriber")
-             .find({zipCode: this.zipCode})
-             .exec()
-}
-*/
 
 module.exports = mongoose.model("Subscriber", subscriberSchema);

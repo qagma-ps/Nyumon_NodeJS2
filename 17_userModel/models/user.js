@@ -2,7 +2,7 @@
 
 const mongoose = require("mongoose"),
       {Schema} = mongoose,
-      Subscriber = require("./subscriber")
+      Subscriber = require("./subscriber");
 
 const userSchema = new Schema({
   name: {
@@ -18,7 +18,6 @@ const userSchema = new Schema({
   email: {
     type: String,
     require: true,
-    lowercase: true,
     unique: true
   },
   zipCode: {
@@ -30,8 +29,13 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  course: [{type: Schema.Types.ObjectId, ref: "Course"}],
-  subscribedAccount: {type: Schema.Types.ObjectId, ref: "Subscriber"}
+  course: [{
+    type: Schema.Types.ObjectId,
+    ref: "Course"
+  }],
+  subscribedAccount: {
+    type: Schema.Types.ObjectId,
+    ref: "Subscriber"}
 }, {
   timestamps: true
 });
