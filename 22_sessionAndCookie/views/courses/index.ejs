@@ -1,0 +1,15 @@
+<h1>Our Courses</h1>
+<%# loop array of courses within views %>
+<% courses.forEach(course => { %>
+  <h3> <%= course.title %> </h3>
+  <span><%= course.description %> </span>
+  <br>
+  <span>$ <%= course.cost %>, </span>
+  <span><%= course.maxStudents %> students</span>
+  <br>
+  <a href="<%= `/courses/${course._id}/edit` %>">Edit</a>
+  <a href="<%= `/courses/${course._id}/delete?_method=DELETE` %>" onclick="return confirm(`Are you sure you want to delete this record?`)">Delete</a>
+  <p>--------------</p>
+<% }); %>
+
+<p><a href="/courses/new">新規コース登録</a></p>

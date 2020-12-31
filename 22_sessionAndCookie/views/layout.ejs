@@ -1,0 +1,23 @@
+<body>
+  <div id="nav">
+    <h3>NAVIGATION</h3>
+    <span style="background-color:#ff6666"><a href="/courses">Courses</a></span>
+    <span style="background-color:#66ff66"><a href="/subscribers">Subscribers</a></span>
+    <span style="background-color:#6666ff"><a href="/users">Users</a></span>
+  </div>
+    <hr>
+    <div class="flashes">
+      <% if (flashMessages) {%>
+        <% if (flashMessages.success) { %>
+          <div class="flash success"><%= flashMessages.success %></div>
+        <% } else if (flashMessages.error) { %>
+          <div class="flash error"><%= flashMessages.error %></div>
+        <% } %>
+      <% } %>
+    </div>
+    <%- body %>
+    <hr>
+  <div id="footer">
+    <h3>FOOTER</h3>
+  </div>
+</body>
