@@ -13,6 +13,7 @@ const User = require("../models/user"),
         }
       };
 const {validationResult} = require("express-validator");
+const passport = require("passport");
 
 module.exports = {
   index: (req, res, next) => {
@@ -34,20 +35,18 @@ module.exports = {
   },
   create: (req, res, next) => {
     if(req.skip) next();
-    let userParams = getUserParams(req.body);
-    User.create(userParams)
-      .then(user => {
+    let newUser = new User(getUserParams(req.body));
+    User.register(newUser, req.body.password, (error, user) =>{
+      if (user) {
         req.flash("success", `${user.fullName}'s account created successfully!`);
         res.locals.redirect = "/users";
-        res.locals.user = user;
         next();
-      })
-      .catch(error => {
-        console.log(`Error saving user: ${error.message}`);
-        res.locals.redirect = "/users/new";
+      } else {
         req.flash("error", `Failed to create user account because: ${error.message}.`);
+        res.locals.redirect = "/users/new";
         next();
-      });
+      }
+    });
   },
   redirectView: (req, res, next) => {
     let redirectPath = res.locals.redirect;
@@ -115,7 +114,20 @@ module.exports = {
   login: (req, res) => {
     res.render("users/login");
   },
-  authenticate: (req, res, next) => {
+  authenticate: passport.authenticate("local", {
+    failureRedirect: "/users/login",
+    failureFlash: "Failed to login.",
+    successRedirect: "/",
+    successFlash: "Logged in!"
+  }),
+  logout: (req, res, next) => {
+    req.logout();
+    req.flash("success", "You have been logged out!");
+    res.locals.redirect = "/";
+    next();
+  },
+/*
+  (req, res, next) => {
     User.findOne({
       email: req.body.email
     })
@@ -144,6 +156,7 @@ module.exports = {
       next(error);
     });
   },
+*/
   validate: (req, res, next) => {
     const errors = validationResult(req);
       if(!errors.isEmpty()){

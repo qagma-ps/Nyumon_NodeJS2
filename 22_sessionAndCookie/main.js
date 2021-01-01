@@ -13,12 +13,15 @@ const port = 3000,
       coursesController = require("./controllers/coursesController"),
       router = express.Router(),
       methodOverride = require("method-override"),
-      {check} = require("express-validator");
+      {check} = require("express-validator"),
+      passport = require("passport");
 
 
 const expressSession = require("express-session"),
       cookieParser = require("cookie-parser"),
       connectFlash = require("connect-flash");
+
+const User = require("./models/user");
 
 mongoose.connect(dbURL+dbName, {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -28,8 +31,8 @@ db.once("open", () => {
 mongoose.Promise = global.Promise;
 
 app.set("view engine", "ejs");
-app.use(layouts);
 
+router.use(layouts);
 router.use(express.urlencoded({
   extended: false
 }));
@@ -48,14 +51,22 @@ router.use(expressSession({
   saveUninitialized: false
 }));
 router.use(connectFlash());
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 router.use((req, res, next) => {
   res.locals.flashMessages = req.flash();
+  res.locals.loggedIn = req.isAuthenticated();
+  res.locals.currentUser = req.user;
   next();
 });
 
 app.use("/", router);
 router.get("/", (req, res) => {
-  res.send("Welocome to Confetti Cuisine!");
+  res.render("index");
 });
 router.get("/subscribers", subscribersController.index, subscribersController.indexView);
 router.get("/subscribers/new", subscribersController.new);
@@ -67,7 +78,8 @@ router.delete("/subscribers/:id/delete", subscribersController.delete, subscribe
 
 router.get("/users", usersController.index, usersController.indexView);
 router.get("/users/login", usersController.login);
-router.post("/users/login", usersController.authenticate, usersController.redirectView);
+router.post("/users/login", usersController.authenticate);
+router.get("/users/logout", usersController.logout, usersController.redirectView);
 router.get("/users/new", usersController.new);
 router.post("/users/create", [
   check('email','Email is invalid').normalizeEmail().trim().isEmail(),

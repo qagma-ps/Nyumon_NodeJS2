@@ -4,6 +4,14 @@
     <span style="background-color:#ff6666"><a href="/courses">Courses</a></span>
     <span style="background-color:#66ff66"><a href="/subscribers">Subscribers</a></span>
     <span style="background-color:#6666ff"><a href="/users">Users</a></span>
+    <div style="float:right">
+        <% if (loggedIn){ %>
+          Logged in as <a href="<%= `/users/${currentUser._id}` %>"> <%= currentUser.fullName %> </a>
+          <a href="/users/logout"> -- Log Out</a>
+        <% } else { %>
+          <a href="/users/login">Log In</a>
+        <% } %>
+    </div>
   </div>
     <hr>
     <div class="flashes">

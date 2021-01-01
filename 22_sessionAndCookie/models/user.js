@@ -2,7 +2,8 @@
 
 const mongoose = require("mongoose"),
       {Schema} = mongoose,
-      Subscriber = require("./subscriber");
+      Subscriber = require("./subscriber"),
+      passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
   name: {
@@ -64,7 +65,12 @@ userSchema.pre("save", function(next) {
   }
 });
 
+userSchema.plugin(passportLocalMongoose, {
+  usernameField: "email"
+});
+
 //make password hashed
+/*
 const bcrypt = require("bcrypt");
 userSchema.pre("save", function(next) {
   let user = this;
@@ -82,5 +88,6 @@ userSchema.methods.passwordComparison = function(inputPassword){
   let user = this;
   return bcrypt.compare(inputPassword, user.password);
 };
+*/
 
 module.exports = mongoose.model("User", userSchema);
