@@ -12,7 +12,9 @@ const port = 3000,
       usersController = require("./controllers/usersController"),
       coursesController = require("./controllers/coursesController"),
       router = express.Router(),
-      methodOverride = require("method-override");
+      methodOverride = require("method-override"),
+      {check} = require("express-validator");
+
 
 const expressSession = require("express-session"),
       cookieParser = require("cookie-parser"),
@@ -28,11 +30,11 @@ mongoose.Promise = global.Promise;
 app.set("view engine", "ejs");
 app.use(layouts);
 
-app.use(express.urlencoded({
+router.use(express.urlencoded({
   extended: false
 }));
-app.use(express.json());
-app.use(express.static("public"));
+router.use(express.json());
+router.use(express.static("public"));
 router.use(methodOverride("_method", {
   methods: ["POST", "GET"]
 }));
@@ -49,7 +51,7 @@ router.use(connectFlash());
 router.use((req, res, next) => {
   res.locals.flashMessages = req.flash();
   next();
-})
+});
 
 app.use("/", router);
 router.get("/", (req, res) => {
@@ -64,8 +66,18 @@ router.put("/subscribers/:id/update", subscribersController.update, subscribersC
 router.delete("/subscribers/:id/delete", subscribersController.delete, subscribersController.redirectView);
 
 router.get("/users", usersController.index, usersController.indexView);
+router.get("/users/login", usersController.login);
+router.post("/users/login", usersController.authenticate, usersController.redirectView);
 router.get("/users/new", usersController.new);
-router.post("/users/create", usersController.create, usersController.redirectView);
+router.post("/users/create", [
+  check('email','Email is invalid').normalizeEmail().trim().isEmail(),
+  check('password', 'Password cannot be empty').notEmpty(),
+  check('zipCode', 'ZipCode is invalid').notEmpty().isInt().isLength({
+    min: 5,
+    max: 5
+  })
+  ],
+  usersController.validate, usersController.create, usersController.redirectView);
 router.get("/users/:id", usersController.show, usersController.showView);
 router.get("/users/:id/edit", usersController.edit);
 router.put("/users/:id/update", usersController.update, usersController.redirectView);

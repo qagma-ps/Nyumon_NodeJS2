@@ -64,4 +64,23 @@ userSchema.pre("save", function(next) {
   }
 });
 
+//make password hashed
+const bcrypt = require("bcrypt");
+userSchema.pre("save", function(next) {
+  let user = this;
+  bcrypt.hash(user.password, 10).then(hash => {
+    user.password = hash;
+    next();
+  })
+  .catch(error => {
+    console.log(`Error in hasing password: ${error.message}`);
+    next(error);
+  });
+});
+
+userSchema.methods.passwordComparison = function(inputPassword){
+  let user = this;
+  return bcrypt.compare(inputPassword, user.password);
+};
+
 module.exports = mongoose.model("User", userSchema);
