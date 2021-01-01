@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Confettie Cuisine</title>
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-4.0.0-js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/recipeApp.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap-4.0.0-dist/bootstrap.css">
+  </head>
+
+<body>
+  <div id="nav">
+    <h3>NAVIGATION</h3>
+    <span style="background-color:#ff6666"><a href="/courses">Courses</a></span>
+    <span style="background-color:#66ff66"><a href="/subscribers">Subscribers</a></span>
+    <span style="background-color:#6666ff"><a href="/users">Users</a></span>
+    <div style="float:right">
+        <% if (loggedIn){ %>
+          Logged in as <a href="<%= `/users/${currentUser._id}` %>"> <%= currentUser.fullName %> </a>
+          <a href="/users/logout"> -- Log Out</a>
+        <% } else { %>
+          <a href="/users/login">Log In</a>
+        <% } %>
+    </div>
+    <ul>
+      <li><%- include("./courses/_coursesModal") %></li>
+    </ul>
+    <hr>
+  </div>
+
+    <div class="flashes">
+      <% if (flashMessages) {%>
+        <% if (flashMessages.success) { %>
+          <div class="flash success"><%= flashMessages.success %></div>
+        <% } else if (flashMessages.error) { %>
+          <div class="flash error"><%= flashMessages.error %></div>
+        <% } %>
+      <% } %>
+    </div>
+
+    <%- body %>
+
+  <div id="footer">
+    <hr>
+    <h3>FOOTER</h3>
+  </div>
+</body>
+
+</html>
